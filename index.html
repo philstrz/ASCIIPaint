@@ -8,6 +8,7 @@
     </title>
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="icons.css">
     <script src="paint.js"></script>
 </head>
 
@@ -22,7 +23,87 @@
         Drawing tools, palette
      -->
     <div class="left">
+        <div class="panel">
+            <!-- 
+                First row:
+                Pencil, line, fill and grid
+             -->
+            <button title="Pencil" id="pencil" onclick="buttonClick(id);" style="grid-column:1; grid-row:1">
+                <i class="icon icon-pencil"></i>
+            </button>
+            <button title="Line" id="line" onclick="buttonClick(id);" style="grid-column:2; grid-row:1">
+                <i class="icon icon-line"></i>
+            </button>
+            <button title="Fill" id="fill" onclick="buttonClick(id);" style="grid-column:3; grid-row:1">
+                <i class="icon icon-fill"></i>
+            </button>
+            <button title="Grid" id="grid" onclick="buttonClickToggle(id);" style="grid-column:4; grid-row:1">
+                <i class="icon icon-grid"></i>
+            </button>
+            <!-- 
+                Second row:
+                Rect, filled rect, circle, filled circle
+             -->
+            <button title="Rectangle" id="rectangle" onclick="buttonClick(id);" style="grid-column:1; grid-row:2">
+                <i class="icon icon-rect"></i>
+            </button>
+            <button title="Filled Rectangle" id="filled-rectangle" onclick="buttonClick(id);" style="grid-column:2; grid-row:2">
+                <i class="icon icon-rect-filled"></i>
+            </button>
+            <button title="Circle" id="circle" onclick="buttonClick(id);" style="grid-column:3; grid-row:2">
+                <i class="icon icon-circle"></i>
+            </button>
+            <button title="Filled Circle" id="filled-circle" onclick="buttonClick(id);" style="grid-column:4; grid-row:2">
+                <i class="icon icon-circle-filled"></i>
+            </button>
+            <!-- 
+                Next up, tools with a width option
+                Eraser
+                Square brush
+                Circle brush
+            -->
+            <button title="Eraser" id="eraser" onclick="buttonClick(id);" style="grid-column:1; grid-row:3">
+                <i class="icon icon-eraser"></i>
+            </button>
+            <input id="eraser-size" type="range" min="0" max="5" value="1" onchange="updateSlider(id);" autocomplete="off" title="Eraser Size" style="grid-column:2/span 3; grid-row:3">
 
+            <button title="Square Brush" id="square-brush" onclick="buttonClick(id);" style="grid-column:1; grid-row:4">
+                <i class="icon icon-brush-square"></i>
+            </button>
+            <input id="square-size" type="range" min="0" max="5" value="1" onchange="updateSlider(id);" autocomplete="off" title="Eraser Size" style="grid-column:2/span 3; grid-row:4">
+
+            <button title="Circle Brush" id="circle-brush" onclick="buttonClick(id);" style="grid-column:1; grid-row:5">
+                <i class="icon icon-brush-circle"></i>
+            </button>
+            <input id="circle-size" type="range" min="0" max="5" value="1" onchange="updateSlider(id);" autocomplete="off" title="Eraser Size" style="grid-column:2/span 3; grid-row:5">
+
+            <!-- 
+                Color options
+             -->
+             <i class="icon icon-palette"></i>
+             <input id="colorpicker" type="color" onchange="setColor(value)" value="#000000" autocomplete="off" title="Color">
+
+             <i class="icon icon-roller"></i>
+             <input id="bgpicker" type="color" onchange="setBGColor(value)" value="#ffffff" autocomplete="off" title="Color">
+            
+            <!-- 
+                Character options
+            -->
+            <i class="icon icon-char"></i>
+            <h1 id="symbol">
+                X
+            </h1>
+            <p style="grid-column:3/5">
+                Enter any symbol using keyboard
+            </p>
+
+            <i class="icon icon-unicode"></i>
+            <input type="string" id="unicode" maxlength="6" style="grid-column:2/span 3" oninput="enterUnicode(value)" value="" autocomplete="off">
+            <p style="grid-column: 1 / span 4">
+                Some unicode symbols vary in width
+            </p>
+
+        </div>
     </div>
     <!-- 
         Right panel
@@ -38,9 +119,7 @@
      -->
     <div class="center">
         <div id="canvas">
-            <p>
-                Test test test
-            </p>
+            
         </div>
     </div>
 

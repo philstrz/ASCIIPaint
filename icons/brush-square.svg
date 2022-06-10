@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="48"
+   height="48"
+   viewBox="0 0 12.69984 12.69984"
+   version="1.1"
+   id="svg8"
+   inkscape:export-filename="C:\Users\phils\Documents\Unity\basic_graphics\terrain\semicircledown.png"
+   inkscape:export-xdpi="96.000008"
+   inkscape:export-ydpi="96.000008"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   sodipodi:docname="brush-square.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="11.313708"
+     inkscape:cx="18.190502"
+     inkscape:cy="24.958795"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="true"
+     units="px"
+     inkscape:pagecheckerboard="true"
+     borderlayer="true"
+     inkscape:showpageshadow="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1051"
+     inkscape:window-x="902"
+     inkscape:window-y="1084"
+     inkscape:window-maximized="1"
+     guidetolerance="20">
+    <inkscape:grid
+       type="xygrid"
+       id="grid833"
+       spacingx="0.26458"
+       spacingy="0.26458"
+       empspacing="4"
+       dotted="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="path2161"
+       style="fill:#000000;stroke:none;stroke-width:0.26458px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 2.11664,5.2916 v 1.05832 c 0,0.26458 0.26458,0.52916 0.52916,0.52916 h 1.58748 c 0.52916,0 1.05832,0.52916 1.05832,1.05832 l -0.4433781,2.661303 c -0.056675,0.16533 -0.085658,0.338883 -0.085782,0.513657 -10e-8,0.876741 0.710739,1.58748 1.58748,1.58748 0.876741,0 1.5874801,-0.710739 1.58748,-1.58748 -9.5e-6,-0.175121 -0.028995,-0.349033 -0.085782,-0.514691 L 7.40824,7.9374 c 0,-0.52916 0.52916,-1.05832 1.05832,-1.05832 h 1.58748 c 0.26458,0 0.52916,-0.26458 0.52916,-0.52916 V 5.2916 Z m 4.2198444,5.2916 h 5.167e-4 c 0.00431,-5.3e-5 0.00861,-5.3e-5 0.012919,0 0.292247,0 0.52916,0.236913 0.52916,0.52916 -1.026e-4,0.274943 -0.2107474,0.504002 -0.4847188,0.527093 -0.010484,0.001 -0.020996,0.0017 -0.031522,0.0021 -0.00431,5.3e-5 -0.00861,5.3e-5 -0.012919,0 -0.292247,0 -0.52916,-0.236913 -0.52916,-0.52916 -9.25e-5,-0.287079 0.2287375,-0.521871 0.5157244,-0.52916 z"
+       sodipodi:nodetypes="cccscccscccscccccccccccccc" />
+    <path
+       id="rect2183"
+       style="fill:#000000;fill-rule:evenodd;stroke:none;stroke-width:4;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none"
+       d="M 8,0 V 18 H 40 V 0 H 31.875 L 31,9 30.125,0 H 20.75 L 20,5 19.25,0 Z"
+       transform="scale(0.26458)"
+       sodipodi:nodetypes="ccccccccccc" />
+  </g>
+</svg>
