@@ -1,0 +1,3 @@
+All of the features of the previous version and then some.
+
+I tried adding a unicode option, but it created more problems than it was worth.

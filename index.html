@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="icons.css">
     <script src="paint.js"></script>
+
+    <!-- 
+        Use html2canvas for the "export" function to save PNGs
+    -->
+    <script src="html2canvas.js"></script>
 </head>
 
 <body>
@@ -62,46 +67,46 @@
                 Square brush
                 Circle brush
             -->
-            <button title="Eraser" id="eraser" onclick="buttonClick(id);" style="grid-column:1; grid-row:3">
+            <button title="Eraser" id="eraser" onclick="buttonClick(id);" style="grid-column:1; grid-row:4">
                 <i class="icon icon-eraser"></i>
             </button>
-            <input id="eraser-size" type="range" min="0" max="5" value="1" onchange="updateSlider(id);" autocomplete="off" title="Eraser Size" style="grid-column:2/span 3; grid-row:3">
+            <input id="eraser-size" type="range" min="0" max="5" value="1" onchange="updateSlider(id);" autocomplete="off" title="Eraser Size" style="grid-column:2/span 3; grid-row:4">
 
-            <button title="Square Brush" id="square-brush" onclick="buttonClick(id);" style="grid-column:1; grid-row:4">
+            <button title="Square Brush" id="square-brush" onclick="buttonClick(id);" style="grid-column:1; grid-row:5">
                 <i class="icon icon-brush-square"></i>
             </button>
-            <input id="square-size" type="range" min="0" max="5" value="1" onchange="updateSlider(id);" autocomplete="off" title="Eraser Size" style="grid-column:2/span 3; grid-row:4">
+            <input id="square-size" type="range" min="0" max="5" value="1" onchange="updateSlider(id);" autocomplete="off" title="Eraser Size" style="grid-column:2/span 3; grid-row:5">
 
-            <button title="Circle Brush" id="circle-brush" onclick="buttonClick(id);" style="grid-column:1; grid-row:5">
+            <button title="Circle Brush" id="circle-brush" onclick="buttonClick(id);" style="grid-column:1; grid-row:6">
                 <i class="icon icon-brush-circle"></i>
             </button>
-            <input id="circle-size" type="range" min="0" max="5" value="1" onchange="updateSlider(id);" autocomplete="off" title="Eraser Size" style="grid-column:2/span 3; grid-row:5">
+            <input id="circle-size" type="range" min="0" max="5" value="1" onchange="updateSlider(id);" autocomplete="off" title="Eraser Size" style="grid-column:2/span 3; grid-row:6">
 
             <!-- 
                 Color options
              -->
-             <i class="icon icon-palette"></i>
-             <input id="colorpicker" type="color" onchange="setColor(value)" value="#000000" autocomplete="off" title="Color">
+             <i class="icon icon-palette" style="grid-row: 8"></i>
+             <input id="colorpicker" type="color" onchange="setColor(value)" value="#000000" autocomplete="off" title="Color" style="grid-row: 8">
 
-             <i class="icon icon-roller"></i>
-             <input id="bgpicker" type="color" onchange="setBGColor(value)" value="#ffffff" autocomplete="off" title="Color">
+             <i class="icon icon-roller" style="grid-row: 8"></i>
+             <input id="bgpicker" type="color" onchange="setBGColor(value)" value="#ffffff" autocomplete="off" title="Color" style="grid-row: 8">
             
             <!-- 
                 Character options
             -->
-            <i class="icon icon-char"></i>
-            <h1 id="symbol">
+            <i class="icon icon-char" style="grid-row: 10"></i>
+            <h1 id="symbol" style="grid-row: 10">
                 X
             </h1>
-            <p style="grid-column:3/5">
+            <p style="grid-column:3/5; grid-row: 10">
                 Enter any symbol using keyboard
             </p>
 
-            <i class="icon icon-unicode"></i>
-            <input type="string" id="unicode" maxlength="6" style="grid-column:2/span 3" oninput="enterUnicode(value)" value="" autocomplete="off">
-            <p style="grid-column: 1 / span 4">
-                Some unicode symbols vary in width
-            </p>
+            <!-- <i class="icon icon-unicode" style="grid-row: 12"></i>
+            <input type="string" id="unicode" maxlength="6" style="grid-column:2/span 3; grid-row: 12" oninput="enterUnicode(value)" value="" autocomplete="off">
+            <p style="grid-column: 1 / span 4; grid-row: 13">
+                Some unicode symbols have unusual dimensions or cause other errors
+            </p> -->
 
         </div>
     </div>
@@ -110,7 +115,43 @@
         Undo, canvas size, import/export, preview
     -->
     <div class="right">
+        <div class="panel">
+            <!-- 
+                Undo, redo, reset
+             -->
+            <button title="Undo" id="undo" onclick="buttonClickOnce(id);" style="grid-column:1; grid-row:1">
+                <i class="icon icon-undo"></i>
+            </button>
+            <button title="Redo" id="redo" onclick="buttonClickOnce(id);" style="grid-column:2; grid-row:1">
+                <i class="icon icon-redo"></i>
+            </button>
+            <button title="Reset" id="reset" onclick="buttonClickOnce(id);" style="grid-column:4; grid-row:1">
+                <i class="icon icon-reset"></i>
+            </button>
+            
+            <!-- 
+                Canvas size settings
+             -->
+            <i class="icon icon-size" title="Canvas Size" style="grid-row: 3 / span 2; grid-column: 1; padding: 16px 0"></i>
+            <i class="icon icon-width" title="Canvas Width" style="grid-row: 3; grid-column: 2"></i>
+            <input type="number" title="Canvas Width" style="grid-row: 3; grid-column: 3 / span 2" min="1" value="48" autocomplete="off" onchange="setWidth(value);">
+            <i class="icon icon-height" title="Canvas Height" style="grid-row: 4; grid-column:2"></i>
+            <input type="number" title="Canvas Height" style="grid-row: 4; grid-column: 3 / span 2" min="1" value="24" autocomplete="off" onchange="setHeight(value);">
 
+            <!-- 
+                Import/export
+            -->
+            <i class="icon icon-save" style="grid-row:6"></i>
+            <button title="Save as PNG" id="save-png" onclick="buttonClickOnce(id);" style="grid-row:6">
+                <i class="icon icon-image"></i>
+            </button>
+            <button title="Copy Text" id="save-text" onclick="buttonClickOnce(id);" style="grid-row:6">
+                <i class="icon icon-text"></i>
+            </button>
+            <button title="Copy HTML" id="save-html" onclick="buttonClickOnce(id);" style="grid-row:6">
+                <i class="icon icon-code"></i>
+            </button>
+        </div>
     </div>
 
     <!-- 

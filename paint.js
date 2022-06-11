@@ -19,6 +19,7 @@ var scale = 100;
 let width = 48;
 let height = 24;
 let grid = false;
+let gridstyle = '1px dashed';
 
 // Properties for tracking interaction
 let mode = null;
@@ -44,6 +45,12 @@ let square_size = 0;
 let eraser_size = 0;
 let circle_size = 0;
 
+// Called reset
+function restart() {
+    if(confirm("This will clear the canvas. Are you sure?")) {
+        reset();
+    }
+}
 
 // Does not include some initial setup, called by setup
 function reset() {
@@ -55,13 +62,15 @@ function reset() {
     for (let i = 0; i < height; i++) {
         for (let j = 0; j < width; j++) {
             html += '<span class="pixel" style="display:inline"';
-            html += 'id="x' + j + 'y' + i + '">'
+            html += 'id="x' + j + 'y' + i + '">';
             html += '&nbsp';
             html += '</span>';
         }
         html += '<br>';
     }
     canvas.innerHTML = html;
+
+    regrid();
 
     // Reset undo/redo
     state_idx = 0;
@@ -77,6 +86,7 @@ function setup() {
 
     canvas.addEventListener('mousedown', mouseDown);
     canvas.addEventListener('mousemove', mouseMove);
+    canvas.addEventListener('mouseleave', mouseUp);
 
     // Set starting widths of relevant elements
     let sizes = ['square-size', 'eraser-size', 'circle-size'];
@@ -88,6 +98,8 @@ function setup() {
     buttonClick(button);
 
     setBGColor(bgcolor);
+
+    scaleCanvas(0.8);
 }
 
 // Handle keyboard input
@@ -130,6 +142,66 @@ function scroll(event) {
     }
 }
 
+// Change width based on input
+function setWidth (value) {
+    value = parseInt(value);
+    if (value != value) return;
+    if (value <= 0) return;
+    width = value;
+    resize();
+}
+
+// Change height based on input
+function setHeight (value) {
+    value = parseInt(value);
+    if (value != value) return;
+    if (value <= 0) return;
+    height = value;
+    resize();
+}
+
+function resize() {
+    let html = '';
+    let id = null;
+    let was = null;
+    for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+            id = 'x' + j + 'y' + i;
+            was = document.getElementById(id);
+            if (was) {
+                html += was.outerHTML;
+            } else {
+                html += '<span class="pixel" style="display:inline"';
+                html += 'id="x' + j + 'y' + i + '">';
+                html += '&nbsp';
+                html += '</span>';
+            }
+        }
+        html += '<br>';
+    }
+    canvas.innerHTML = html;
+
+    // Adjust grid
+    regrid();
+        
+    state_idx += 1;
+    state_lim = state_idx;
+    states[state_idx] = canvas.innerHTML;
+}
+
+// Redraw the grid if enabled, otherwise clear it
+function regrid(){
+    if (grid) {
+        for (let elem of canvas.children) {
+            elem.style.outline = gridstyle + gridcolor;
+        }
+    } else {
+        for (let elem of canvas.children) {
+            elem.style.outline = null;
+        }
+    }
+}
+
 // Adjust the canvas
 function scaleCanvas(amount) {
     scale *= amount;
@@ -139,7 +211,11 @@ function scaleCanvas(amount) {
 // Set the character to draw with
 function setChar(key) {
     if (key != " ") {
-        // if (key.length > 1) key = key[0];
+        if (key.slice(0,3) == '&#x') {
+            if (key.length <= 3) return;
+        } else {
+            if (key.length > 1) return;
+        }
         document.getElementById("symbol").innerHTML = key;
         char = key;
     }
@@ -149,11 +225,10 @@ function setChar(key) {
 function enterUnicode(code) {
     code = code.trim();
     if (code.includes('U+')) code = code.slice(2);
-    code = parseInt(code, 16);
+    if (parseInt(code, 16) != parseInt(code, 16)) return;
     if (code != code) return;
-    let char = '';
-    char = '&#x' + code;
-    setChar(char);
+    code = '&#x' + code;
+    setChar(code);
 }
 
 function buttonUp(id) {
@@ -193,32 +268,16 @@ function buttonClickOnce(id) {
             state_idx -= 1;
             state_idx = state_idx < 0? 0 : state_idx;
             canvas.innerHTML = states[state_idx];
-            if (grid) {
-                for (let elem of canvas.children) {
-                    elem.style.outline = '1px dashed' + gridcolor;
-                }
-            } else {
-                for (let elem of canvas.children) {
-                    elem.style.outline = null;
-                }
-            }
+            regrid()
             break;
         case 'redo':
             state_idx += 1;
             state_idx = state_idx > state_lim? state_lim : state_idx;
             canvas.innerHTML = states[state_idx];
-            if (grid) {
-                for (let elem of canvas.children) {
-                    elem.style.outline = '1px dashed' + gridcolor;
-                }
-            } else {
-                for (let elem of canvas.children) {
-                    elem.style.outline = null;
-                }
-            }
+            regrid()
             break;
         case 'reset':
-            reset();
+            restart();
             break;
         case 'save-png':
             savePNG();
@@ -242,18 +301,13 @@ function buttonClickToggle(id) {
 
 function toggleGrid(id) {
     if (grid) {
-        for (let elem of canvas.children) {
-            elem.style.outline = null;
-        }
         grid = false;
         buttonUp(id);
     } else {
-        for (let elem of canvas.children) {
-            elem.style.outline = '1px dashed' + gridcolor;
-        }
         grid = true;
         buttonDown(id);
     }
+    regrid();
 }
 
 function mouseDown(event) {
@@ -264,13 +318,13 @@ function mouseDown(event) {
             startPencil(event.target);
             break;
         case 'square-brush':
-            startSquare(event.target);
+            startSquareBrush(event.target);
             break;
         case 'eraser':
             startEraser(event.target);
             break;
         case 'circle-brush':
-            startCircle(event.target);
+            startCircleBrush(event.target);
             break;
         case 'line':
             startLine(event.target);
@@ -278,29 +332,52 @@ function mouseDown(event) {
         case 'fill':
             startFill(event.target);
             break;
+        case 'rectangle':
+            startRectangle(event.target);
+            break;
+        case 'filled-rectangle':
+            startRectangle(event.target);
+            break;
+        case 'circle':
+            startCircle(event.target);
+            break;
+        case 'filled-circle':
+            startCircle(event.target);
+            break;
     }
     last_target = event.target;
 }
 
-function mouseUp(event) {
+function mouseUp() {
     // Handle mouse button release
     switch (mode) {
         case 'pencil':
-            stopPencil(event.target);
+            stopPencil();
             break;
         case 'square-brush':
-            stopSquare(event.target);
+            stopSquareBrush();
             break;
         case 'eraser':
-            stopEraser(event.target);
+            stopEraser();
             break;
         case 'circle-brush':
-            stopCircle(event.target);
+            stopCircleBrush();
             break;
         case 'line':
-            stopLine(event.target);
+            stopLine();
             break;
-        
+        case 'rectangle':
+            stopRectangle();
+            break;
+        case 'filled-rectangle':
+            stopRectangle();
+            break;
+        case 'circle':
+            stopCircle();
+            break;
+        case 'filled-circle':
+            stopCircle();
+            break;
     }
     mouse_down = false;
     last_target = null;
@@ -315,18 +392,29 @@ function mouseMove(event) {
                 movePencil(event.target);
                 break;
             case 'square-brush':
-                moveSquare(event.target);
+                moveSquareBrush(event.target);
                 break;
             case 'eraser':
                 moveEraser(event.target);
                 break;
             case 'circle-brush':
-                moveCircle(event.target);
+                moveCircleBrush(event.target);
                 break;
             case 'line':
                 moveLine(event.target);
                 break;
-            
+            case 'rectangle':
+                moveRectangle(event.target, false);
+                break;
+            case 'filled-rectangle':
+                moveRectangle(event.target, true);
+                break;
+            case 'circle':
+                moveCircle(event.target);
+                break;
+            case 'filled-circle':
+                moveCircle(event.target, true);
+                break;
         }
     }
     last_target = event.target;
@@ -377,11 +465,7 @@ function setBGColor(value) {
         color = color >= 128? color - 64: color + 64;
         gridcolor += color.toString(16, 2);
     }
-    if (grid) {
-        for (let elem of canvas.children) {
-            elem.style.outline = '1px dashed' + gridcolor;
-        }
-    }
+    regrid();
 }
 
 
@@ -390,9 +474,8 @@ function setBGColor(value) {
 
 function saveHTML() {
     let html = '';
-    // html += '<div style="display: inline; text-align: center; font-family: monospace; font-size: ' + font + 'px; background-color: ' + easel.style.backgroundColor + ';">';
-    html += '<div style="display: inline; text-align: center; font-family: monospace; background-color: ' + easel.style.backgroundColor + ';">';
-    html += easel.innerHTML;
+    html += '<div style="display: inline; text-align: center; font-family: monospace; background-color: ' + canvas.style.backgroundColor + ';">';
+    html += canvas.innerHTML;
     html += '</div>';
 
     navigator.clipboard.writeText(html);
@@ -401,9 +484,9 @@ function saveHTML() {
 function saveText() {
     let text = '';
     try {
-        text = easel.innerText;
+        text = canvas.innerText;
     } catch (e) {
-        text = easel.innerHTML;
+        text = canvas.innerHTML;
         text = text.replace(/<br>/g, '\n');
         text = text.replace(/<[^>]*>/g, '');
         var re = new RegExp('\&nbsp;', "g");
@@ -414,12 +497,15 @@ function saveText() {
 }
 
 function savePNG() {
-    html2canvas(easel).then(function(canvas) {
+    let border = canvas.style.border;
+    canvas.style.border = 'none';
+    html2canvas(canvas).then(function(canvas) {
         let a = document.createElement("a");
         a.download = "ascii.png";
         a.href = canvas.toDataURL("image/png");
         a.click();
     })
+    canvas.style.border = border;
 }
 
 // ------------------------ All Pencil methods ------------------------ //
@@ -435,7 +521,7 @@ function startPencil(target) {
     }
 }
 
-function stopPencil(target) {
+function stopPencil() {
     if (mouse_down) {
         state_idx += 1;
         state_lim = state_idx;
@@ -510,18 +596,12 @@ function moveLine(target) {
                 startPencil(target);
             }
         }
-        if (grid) {
-            for (let elem of canvas.children) {
-                elem.style.outline = '1px dashed' + gridcolor;
-            }
-        }
-        
-
     }
+    regrid();
 }
 
-function stopLine(target) {
-    stopPencil(null);
+function stopLine() {
+    stopPencil();
 }
 
 // ------------------------ Fill ------------------------ //
@@ -566,14 +646,132 @@ function startFill(target) {
             }
         }
     }
-    stopPencil(null);
+    stopPencil();
 }
 
 // ------------------------ Rectangle/filled rect ------------------------ //
 
+function startRectangle(target) {
+    if (target.className == 'pixel') {
+        target.innerHTML = char;
+        target.style.color = color;
+        let id = target.id.split('y');
+        x_start = parseInt(id[0].slice(1));
+        y_start = parseInt(id[1]);
+    }
+}
+
+function moveRectangle(target, filled=false) {
+    canvas.innerHTML = states[state_idx];
+    target = document.getElementById(target.id);
+    if (target.className == 'pixel') {
+        let id = target.id.split('y');
+        let x = parseInt(id[0].slice(1));
+        let y = parseInt(id[1]);
+        
+        let left = 0;
+        let right = 0;
+        let top = 0;
+        let bottom = 0;
+        
+        if (x >= x_start) {
+            left = x_start;
+            right = x;
+        } else {
+            left = x;
+            right = x_start;
+        }
+        if (y >= y_start) {
+            top = y_start;
+            bottom = y;
+        } else {
+            top = y;
+            bottom = y_start;
+        }
+        if (filled) {
+            for (x = left; x <= right; x++) {
+                for (y = top; y <= bottom; y++) {
+                    id = 'x' + x + 'y' + y;
+                    target = document.getElementById(id);
+                    startPencil(target);
+                }
+            }
+        } else {
+            for (y of [top, bottom]) {
+                for (x = left; x <= right; x++) {
+                    id = 'x' + x + 'y' + y;
+                    target = document.getElementById(id);
+                    startPencil(target);
+                }
+            }
+            for (x of [left, right]) {
+                for (y = top; y <= bottom; y++) {
+                    id = 'x' + x + 'y' + y;
+                    target = document.getElementById(id);
+                    startPencil(target);
+                }
+            }
+        }
+        regrid();
+    }
+}
+
+function stopRectangle() {
+    stopPencil();
+}
 
 // ------------------------ Circle/filled circ ------------------------ //
 
+function startCircle(target) {
+    if (target.className == 'pixel') {
+        target.innerHTML = char;
+        target.style.color = color;
+        let id = target.id.split('y');
+        x_start = parseInt(id[0].slice(1));
+        y_start = parseInt(id[1]);
+    }
+}
+
+function moveCircle(target, filled=false) {
+    canvas.innerHTML = states[state_idx];
+    target = document.getElementById(target.id);
+    if (target.className == 'pixel') {
+        let id = target.id.split('y');
+        let x = parseInt(id[0].slice(1));
+        let y = parseInt(id[1]);
+
+        let r = Math.pow(x-x_start, 2) + 4*Math.pow(y-y_start, 2);
+        r = Math.sqrt(r);
+        let left = 0, right = 0;
+        for (let theta = 0; theta <= 2 * Math.PI; theta += Math.PI / (8*r)) {
+            x = x_start + r * Math.cos(theta);
+            x = Math.round(x);
+            y = y_start + 0.5 * r * Math.sin(theta);
+            y = Math.round(y);
+
+            id = 'x' + x + 'y' + y;
+            target = document.getElementById(id);
+            if (target) startPencil(target);
+
+            if (filled) {
+                left = x_start - r * Math.abs(Math.cos(theta));
+                left = Math.round(left);
+                right = x_start + r * Math.abs(Math.cos(theta));
+                right = Math.round(right);
+                for (x = left; x < right; x++) {
+                    id = 'x' + x + 'y' + y;
+                    target = document.getElementById(id);
+                    if (target) startPencil(target);
+                }
+            }
+        }
+    }
+    regrid();
+}
+
+function stopCircle() {
+    stopPencil();
+}
 
 // ------------------------ Eraser ------------------------ //
 
@@ -608,14 +806,14 @@ function moveEraser(target) {
     startEraser(target);
 }
 
-function stopEraser(target) {
-    stopPencil(null);
+function stopEraser() {
+    stopPencil();
 }
 
 // ------------------------ Square Brush ------------------------ //
 
 
-function startSquare(target) {
+function startSquareBrush(target) {
     startPencil(target);
     if (target.className == 'pixel') {
         let coordinates = target.id.split('y');
@@ -643,11 +841,11 @@ function startSquare(target) {
     
 }
 
-function stopSquare(target) {
-    stopPencil(null);
+function stopSquareBrush() {
+    stopPencil();
 }
 
-function moveSquare(target) {
+function moveSquareBrush(target) {
     if (target.className == 'pixel') {
         let id = lastPencil.id.split('y');
         x_start = parseInt(id[0].slice(1));
@@ -662,7 +860,7 @@ function moveSquare(target) {
         let length = Math.max(Math.abs(line_width), Math.abs(line_height));
 
         if (length <= 0) {
-            startSquare(target);
+            startSquareBrush(target);
         } else {
             let w = 0, h = 0;
             for (let t = 0; t <= length; t++) {
@@ -670,7 +868,7 @@ function moveSquare(target) {
                 h = Math.round(line_height * t / length);
                 id = 'x' + (x_start + w) + 'y' + (y_start + h);
                 target = document.getElementById(id);
-                startSquare(target);
+                startSquareBrush(target);
             }
         }
     }
@@ -679,7 +877,7 @@ function moveSquare(target) {
 
 // ------------------------ Circle Brush ------------------------ //
 
-function startCircle(target) {
+function startCircleBrush(target) {
     startPencil(target);
     if (target.className == 'pixel') {
         let coordinates = target.id.split('y');
@@ -710,7 +908,7 @@ function startCircle(target) {
     }
 }
 
-function moveCircle(target) {
+function moveCircleBrush(target) {
     if (target.className == 'pixel') {
         let id = lastPencil.id.split('y');
         x_start = parseInt(id[0].slice(1));
@@ -725,7 +923,7 @@ function moveCircle(target) {
         let length = Math.max(Math.abs(line_width), Math.abs(line_height));
 
         if (length <= 0) {
-            startCircle(target);
+            startCircleBrush(target);
         } else {
             let w = 0, h = 0;
             for (let t = 0; t <= length; t++) {
@@ -733,13 +931,13 @@ function moveCircle(target) {
                 h = Math.round(line_height * t / length);
                 id = 'x' + (x_start + w) + 'y' + (y_start + h);
                 target = document.getElementById(id);
-                startCircle(target);
+                startCircleBrush(target);
             }
         }
     }
 }
 
-function stopCircle(target) {
-    stopPencil(null);
+function stopCircleBrush() {
+    stopPencil();
 }
 
