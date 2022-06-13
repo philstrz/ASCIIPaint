@@ -1,9 +1,12 @@
 :root {
-    --black: #222;
-    --white: #eee;
-    --grey: #777;
-    --dark: #123456;
-    --complement: #789abc;
+    --darkest: #222;
+    --dark: #444;
+    --medium: #999;
+    --light: #ccc;
+    --lightest: #eee;
+
+    --main: #086FA1;
+    --complement: #FFA339;
 }
 
 /* Not being used, but could be */
@@ -20,7 +23,7 @@
 }
 
 body {
-    background-color: var(--black);
+    background-color: var(--darkest);
 }
 
 main {
@@ -30,7 +33,9 @@ main {
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     border-radius: 16px;
-    background-color: var(--grey);
+    border-top: 16px solid var(--medium);
+    border-bottom: 16px solid var(--medium);
+    /* background-color: var(--darkest); */
     width: 1280px;
     height: 640px;
     display: grid;
@@ -39,8 +44,8 @@ main {
 }
 
 .left, .right {
-    background-color: #555;
-    border-radius: 16px;
+    background-color: var(--medium);
+    /* border-radius: 16px; */
 }
 
 .left {
@@ -62,12 +67,14 @@ main {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    background-color: var(--dark);
+    border: 2px solid var(--darkest);
 }
 
 #canvas {
     width: fit-content;
     height: fit-content;
-    border: 8px solid yellow;
+    /* border: 8px solid var(--complement); */
     border-radius: 8px;
     font-size: 24px;
     cursor: crosshair;
@@ -84,8 +91,8 @@ div {
 }
 
 input::selection{
-    color: red;
-    background: blue;
+    color: var(--lightest);
+    background: var(--darkest);
 }
 
 .panel {
@@ -103,23 +110,36 @@ button {
     width: 32px;
     height: 32px;
     border-radius: 8px;
+    background-color: var(--medium);
+    border-width: 0;
+}
+
+button:hover {
+    background-color: var(--light);
+}
+
+button i {
+    font-size: 24px;
+    color: var(--dark);
+    margin: auto auto;
 }
 
 i {
     font-size: 24px;
-    color: grey;
+    color: var(--darkest);
     margin: auto auto;
 }
 
 input[type=range] {
     width: 96px;
     height: 32px;
+    accent-color: var(--dark);
 }
 
 input[type=color] {
     width: 28px;
     height: 28px;
-    border: 2px solid white;
+    border: 2px solid var(--lightest);
     border-radius: 4px
 }
 
@@ -133,10 +153,17 @@ input[type=string] {
 
 input[type=number] {
     width: calc(32px * 2);
-    height: 32px;
+    height: 28px;
     border-radius: 8px;
     text-align: center;
     font-size: 24px;
+    color: var(--darkest);
+    background-color: var(--lightest);
+    border-width: 0;
+}
+
+input:focus {
+    accent-color: var(--complement);
 }
 
 #unicode {
@@ -149,9 +176,11 @@ h1 {
     width: 32px;
     height: 32px;
     text-align: center;
+    color: var(--darkest);
 }
 
 p {
     font-size: 9px;
     padding: 2px 0;
+    color: var(--darkest);
 }
