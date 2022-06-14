@@ -606,14 +606,35 @@ function stopLine() {
 
 // ------------------------ Fill ------------------------ //
 
+function rgb2hex(rgb) {
+    if (!rgb) return '#000000';
+    rgb = rgb.slice(4).split(',');
+    let r = parseInt(rgb[0]);
+    let g = parseInt(rgb[1]);
+    let b = parseInt(rgb[2]);
+
+    r = r.toString(16);
+    g = g.toString(16);
+    b = b.toString(16);
+
+    if (r.length < 2) r = '0' + r;
+    if (g.length < 2) g = '0' + g;
+    if (b.length < 2) b = '0' + b;
+    
+    return '#' + r + g + b;
+}
+
 function startFill(target) {
     if (target.className != 'pixel') return;
     let startColor = target.style.color;
     let startChar = target.innerHTML;
+    startColor = startColor;
 
-    spread(target);
+    if (startChar == char && rgb2hex(startColor) == color) return;
 
-    function spread(target) {
+    spread(target, null, null);
+
+    function spread(target, last_x, last_y) {
         if (target.innerHTML == char && target.style.color == color) {
             return;
         }
@@ -638,10 +659,17 @@ function startFill(target) {
                 if (y+i < 0 || y+i >= height) {
                     continue;
                 }
+                if (j == last_x) continue;
+                if (i == last_y) continue;
                 id = 'x' + (x+j) + 'y' + (y+i);
                 target = document.getElementById(id);
                 if (target.innerHTML == startChar && target.style.color == startColor) {
-                    spread(target);
+                    try{
+                        spread(target, -j, -i);
+                    } catch {
+                        console.log('caught');
+                        spread(target, -j, -i);
+                    }
                 }
             }
         }
