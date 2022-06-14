@@ -668,7 +668,6 @@ function startFill(target) {
                         spread(target, -j, -i);
                     } catch {
                         console.log('caught');
-                        spread(target, -j, -i);
                     }
                 }
             }
