@@ -16,7 +16,7 @@ window.addEventListener("mouseup", mouseUp);
 // Adjusting the 'canvas' element
 var canvas = null;
 var scale = 100;
-let width = 48;
+let width = 72;
 let height = 24;
 let grid = false;
 let gridstyle = '1px dashed';
@@ -99,7 +99,8 @@ function setup() {
 
     setBGColor(bgcolor);
 
-    scaleCanvas(0.8);
+    // scaleCanvas(0.8);
+    fitCanvas();
 }
 
 // Handle keyboard input
@@ -181,6 +182,8 @@ function resize() {
     }
     canvas.innerHTML = html;
 
+    fitCanvas();
+
     // Adjust grid
     regrid();
         
@@ -202,10 +205,22 @@ function regrid(){
     }
 }
 
+function fitCanvas() {
+    let w = 83 / width;
+    let h = 27 / height;
+    let m = 80 * Math.min(w, h);
+    setCanvas(m);
+}
+
+function setCanvas(amount) {
+    scale = amount;
+    canvas.style.transform = "scale(" + scale + "%)";
+}
+
 // Adjust the canvas
 function scaleCanvas(amount) {
-    scale *= amount;
-    canvas.style.transform = "scale(" + scale + "%)";
+    // scale *= amount;
+    // canvas.style.transform = "scale(" + scale + "%)";
 }
 
 // Set the character to draw with
@@ -391,6 +406,9 @@ function mouseMove(event) {
             case 'pencil':
                 movePencil(event.target);
                 break;
+            case 'fill':
+                startFill(event.target);
+                break;
             case 'square-brush':
                 moveSquareBrush(event.target);
                 break;
@@ -530,6 +548,7 @@ function stopPencil() {
 }
 
 function movePencil(target) {
+    if (!lastPencil) startPencil(target);
     if (target.className == 'pixel') {
         let id = lastPencil.id.split('y');
         x_start = parseInt(id[0].slice(1));
@@ -632,11 +651,15 @@ function startFill(target) {
 
     if (startChar == char && rgb2hex(startColor) == color) return;
 
-    spread(target, null, null);
+    while (target) {
+        console.log(target);
+        target = spread(target);
+    }
 
-    function spread(target, last_x, last_y) {
+    function spread(target) {
+        let next = null;
         if (target.innerHTML == char && target.style.color == color) {
-            return;
+            return null;
         }
         target.innerHTML = char;
         target.style.color = color;
@@ -659,19 +682,20 @@ function startFill(target) {
                 if (y+i < 0 || y+i >= height) {
                     continue;
                 }
-                if (j == last_x) continue;
-                if (i == last_y) continue;
                 id = 'x' + (x+j) + 'y' + (y+i);
                 target = document.getElementById(id);
+                if (!target) continue;
                 if (target.innerHTML == startChar && target.style.color == startColor) {
                     try{
-                        spread(target, -j, -i);
+                        next = spread(target);
+                        if (next) return next;
                     } catch {
-                        console.log('caught');
+                        return target;
                     }
                 }
             }
         }
+        return;
     }
     stopPencil();
 }
