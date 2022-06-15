@@ -521,6 +521,10 @@ function preview() {
         var re = new RegExp('\&nbsp;', "g");
         text = text.replace(re, ' ');
     }
+    // Clean up any html code that shows up
+    text = text.replace(/</, '&lt');
+    text = text.replace(/>/, '&rt');
+
     let img = document.getElementById('preview-image');
     img.innerHTML = text;
 
