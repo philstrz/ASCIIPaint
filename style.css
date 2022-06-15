@@ -24,6 +24,10 @@
 
 body {
     background-color: var(--darkest);
+    /* display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; */
 }
 
 main {
@@ -215,4 +219,18 @@ p {
     height: fit-content;
     font-size: 24px;
     text-align: left;
+}
+
+footer {
+    font-size: 16px;
+    color: var(--lightest);
+    position: absolute;
+    left: 50%;
+    bottom: 16px;
+    transform: translate(-50%, 0%);
+    -ms-transform: translate(-50%, 0%);
+}
+
+footer a {
+    color: var(--complement);
 }
