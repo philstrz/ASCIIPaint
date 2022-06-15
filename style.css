@@ -35,7 +35,6 @@ main {
     border-radius: 16px;
     border-top: 16px solid var(--medium);
     border-bottom: 16px solid var(--medium);
-    /* background-color: var(--darkest); */
     width: 1280px;
     height: 640px;
     display: grid;
@@ -118,6 +117,10 @@ button:hover {
     background-color: var(--light);
 }
 
+button:disabled {
+    background-color: var(--medium);
+}
+
 button i {
     font-size: 24px;
     color: var(--dark);
@@ -126,7 +129,7 @@ button i {
 
 i {
     font-size: 24px;
-    color: var(--darkest);
+    color: var(--lightest);
     margin: auto auto;
 }
 
@@ -183,4 +186,33 @@ p {
     font-size: 9px;
     padding: 2px 0;
     color: var(--darkest);
+}
+
+#copy-msg {
+    grid-column: 1 / span 4; 
+    grid-row: 7; 
+    padding: 8px 0 0 8px; 
+    overflow: hidden;
+    opacity: 0;
+}
+
+#preview{
+    grid-row: 14 / span 4;
+    grid-column: 1 / span 4;
+    border: 2px solid var(--darkest);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--lightest);
+}
+
+#preview-image {
+    background-color: var(--lightest);
+    color: var(--darkest);
+    width: fit-content;
+    height: fit-content;
+    font-size: 24px;
+    text-align: left;
 }

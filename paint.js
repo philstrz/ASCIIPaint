@@ -19,6 +19,7 @@ var scale = 100;
 let width = 72;
 let height = 24;
 let grid = false;
+let gridlock = false;
 let gridstyle = '1px dashed';
 
 // Properties for tracking interaction
@@ -34,6 +35,8 @@ let gridcolor = "#000000";
 
 // Keep track of current and previous states
 let states = [];
+let widths = [];
+let heights = [];
 let state_idx = 0;
 let state_lim = 0;
 
@@ -76,6 +79,16 @@ function reset() {
     state_idx = 0;
     state_lim = 0;
     states[state_idx] = canvas.innerHTML;
+    widths[state_idx] = width;
+    heights[state_idx] = height;
+}
+
+function nextState() {
+    state_idx += 1;
+    state_lim = state_idx;
+    states[state_idx] = canvas.innerHTML;
+    widths[state_idx] = width;
+    heights[state_idx] = height;
 }
 
 // Initial setup
@@ -86,7 +99,7 @@ function setup() {
 
     canvas.addEventListener('mousedown', mouseDown);
     canvas.addEventListener('mousemove', mouseMove);
-    canvas.addEventListener('mouseleave', mouseUp);
+    // canvas.addEventListener('mouseleave', mouseUp);
 
     // Set starting widths of relevant elements
     let sizes = ['square-size', 'eraser-size', 'circle-size'];
@@ -149,6 +162,8 @@ function setWidth (value) {
     if (value != value) return;
     if (value <= 0) return;
     width = value;
+    if (width > 120) lockGrid();
+    else if (gridlock && height <= 40) lockGrid(false);
     resize();
 }
 
@@ -158,6 +173,8 @@ function setHeight (value) {
     if (value != value) return;
     if (value <= 0) return;
     height = value;
+    if (height > 40) lockGrid();
+    else if (gridlock && width <= 120) lockGrid(false);
     resize();
 }
 
@@ -187,13 +204,12 @@ function resize() {
     // Adjust grid
     regrid();
         
-    state_idx += 1;
-    state_lim = state_idx;
-    states[state_idx] = canvas.innerHTML;
+    nextState();
 }
 
 // Redraw the grid if enabled, otherwise clear it
 function regrid(){
+    if (gridlock) return;
     if (grid) {
         for (let elem of canvas.children) {
             elem.style.outline = gridstyle + gridcolor;
@@ -248,12 +264,10 @@ function enterUnicode(code) {
 
 function buttonUp(id) {
     let element = document.getElementById(id);
-    element.style.borderStyle = 'outset';
     element.children[0].style.color = 'var(--dark)';
 }
 function buttonDown(id) {
     let element = document.getElementById(id);
-    element.style.borderStyle = 'inset';
     element.children[0].style.color = 'var(--complement)';
 }
 
@@ -283,13 +297,22 @@ function buttonClickOnce(id) {
             state_idx -= 1;
             state_idx = state_idx < 0? 0 : state_idx;
             canvas.innerHTML = states[state_idx];
+            width = widths[state_idx];
+            height = heights[state_idx];
+            console.log(canvas);
             regrid()
+            fitCanvas();
+            preview();
             break;
         case 'redo':
             state_idx += 1;
             state_idx = state_idx > state_lim? state_lim : state_idx;
             canvas.innerHTML = states[state_idx];
+            width = widths[state_idx];
+            height = heights[state_idx];
             regrid()
+            fitCanvas();
+            preview();
             break;
         case 'reset':
             restart();
@@ -314,7 +337,27 @@ function buttonClickToggle(id) {
     }
 }
 
+function lockGrid(bool=true) {
+    let id = 'grid';
+    let element = document.getElementById(id);
+    if (bool) {
+        grid = false;
+        regrid();
+        element.children[0].style.color = 'var(--lightest)';
+        element.title = 'Grid (disabled for large canvas)';
+    } else {
+        buttonUp(id);
+        element.title = 'Grid';
+    }
+    element.disabled = bool;
+    gridlock = bool;
+}
+
 function toggleGrid(id) {
+    if (gridlock) {
+        grid = false;
+        return;
+    }
     if (grid) {
         grid = false;
         buttonUp(id);
@@ -360,6 +403,7 @@ function mouseDown(event) {
             startCircle(event.target);
             break;
     }
+    preview();
     last_target = event.target;
 }
 
@@ -395,6 +439,7 @@ function mouseUp() {
             break;
     }
     mouse_down = false;
+    preview();
     last_target = null;
 }
 
@@ -435,6 +480,7 @@ function mouseMove(event) {
                 break;
         }
     }
+    preview();
     last_target = event.target;
 }
 
@@ -464,6 +510,27 @@ function updateSlider(id) {
     }
 }
 
+function preview() {
+    let text = '';
+    try {
+        text = canvas.innerText;
+    } catch (e) {
+        text = canvas.innerHTML;
+        text = text.replace(/<br>/g, '\n');
+        text = text.replace(/<[^>]*>/g, '');
+        var re = new RegExp('\&nbsp;', "g");
+        text = text.replace(re, ' ');
+    }
+    let img = document.getElementById('preview-image');
+    img.innerHTML = text;
+
+    let w = 92 / width;
+    let h = 43 / height;
+    let m = 10 * Math.min(w, h);
+
+    img.style.transform = "scale(" + m + "%)";
+}
+
 // ------------------------ Color methods ------------------------ //
 
 function setColor(value) {
@@ -486,9 +553,31 @@ function setBGColor(value) {
     regrid();
 }
 
+function setPreviewColor(value) {
+    let pi = document.getElementById('preview-image');
+    pi.style.color = value;
+}
+
+function setPreviewBGColor(value) {
+    let p = document.getElementById('preview');
+    let pi = document.getElementById('preview-image');
+
+    p.style.backgroundColor = value;
+    pi.style.backgroundColor = value;
+}
 
 // ------------------------ Import/export methods ------------------------ //
 
+let timeout = null;
+let opacity = 2;
+let fade_scale = 100;
+
+function fadeMsg() {
+    opacity -= 1 / fade_scale;
+    let msg = document.getElementById("copy-msg");
+    msg.style.opacity = opacity;
+    if (opacity < 0) clearInterval(timeout);
+}
 
 function saveHTML() {
     let html = '';
@@ -497,6 +586,12 @@ function saveHTML() {
     html += '</div>';
 
     navigator.clipboard.writeText(html);
+
+    let msg = document.getElementById("copy-msg");
+    msg.innerHTML = "Copied HTML to clipboard";
+    opacity = 2;
+    if (timeout) clearInterval(timeout);
+    timeout = setInterval(fadeMsg, 10);
 }
 
 function saveText() {
@@ -510,8 +605,13 @@ function saveText() {
         var re = new RegExp('\&nbsp;', "g");
         text = text.replace(re, ' ');
     }
-    
     navigator.clipboard.writeText(text);
+
+    let msg = document.getElementById("copy-msg");
+    msg.innerHTML = "Copied text to clipboard";
+    opacity = 2;
+    if (timeout) clearInterval(timeout);
+    timeout = setInterval(fadeMsg, 10);
 }
 
 function savePNG() {
@@ -524,6 +624,12 @@ function savePNG() {
         a.click();
     })
     canvas.style.border = border;
+
+    let msg = document.getElementById("copy-msg");
+    msg.innerHTML = "Downloading PNG file...";
+    opacity = 2;
+    if (timeout) clearInterval(timeout);
+    timeout = setInterval(fadeMsg, 10);
 }
 
 // ------------------------ All Pencil methods ------------------------ //
@@ -541,9 +647,7 @@ function startPencil(target) {
 
 function stopPencil() {
     if (mouse_down) {
-        state_idx += 1;
-        state_lim = state_idx;
-        states[state_idx] = canvas.innerHTML;
+        nextState();
     }
 }
 
