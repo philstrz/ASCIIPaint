@@ -222,7 +222,7 @@ p {
 }
 
 footer {
-    font-size: 16px;
+    font-size: 12px;
     color: var(--lightest);
     position: absolute;
     left: 50%;
