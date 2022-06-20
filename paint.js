@@ -326,6 +326,9 @@ function buttonClickOnce(id) {
         case 'save-html':
             saveHTML();
             break;
+        case 'import-text':
+            importText();
+            break;
     }
 }
 
@@ -480,8 +483,28 @@ function mouseMove(event) {
                 break;
         }
     }
+    updateCoordinates(event.target);
     preview();
     last_target = event.target;
+}
+
+function updateCoordinates(target) {
+    // Get the x,y,z coordinates of mouse position and update the indicator
+    if (target.className == 'pixel') {
+        let id = target.id;
+        id = id.split('y')
+        let x = parseInt(id[0].slice(1)) + 1;
+        let y = parseInt(id[1]) + 1;
+
+        let text = '';
+        text += 'x: ' + x;
+        text += '<br>';
+        text += 'y: ' + y;
+        text += '<br>';
+        text += 'z: ' + (height - y + 1);
+
+        document.getElementById('coords').innerHTML = text;
+    }
 }
 
 function updateSlider(id) {
@@ -609,6 +632,7 @@ function saveText() {
         var re = new RegExp('\&nbsp;', "g");
         text = text.replace(re, ' ');
     }
+    text = text.slice(0, text.length-1);
     navigator.clipboard.writeText(text);
 
     let msg = document.getElementById("copy-msg");
@@ -634,6 +658,57 @@ function savePNG() {
     opacity = 2;
     if (timeout) clearInterval(timeout);
     timeout = setInterval(fadeMsg, 10);
+}
+
+function importText() {
+    if (!confirm('This will replace the current canvas. Are you sure?')) {
+        return;
+    }
+    reset();
+    // Pull text from textarea
+    let text = document.getElementById('text-input').value;
+    console.log(text);
+    // Break up lines
+    text = text.split('\n');
+
+    // Size canvas
+    height = text.length;
+    width = 0;
+    for (let line of text) {
+        width = Math.max(width, line.length);
+    }
+    document.getElementById('width').value = width;
+    document.getElementById('height').value = height;
+
+    // Reset canvas if no input
+    if (width <= 0 || height <= 0) {
+        width = 72;
+        height = 24;
+        reset();
+        return;
+    }
+
+    // Populate the canvas
+    let html = '';
+    for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+            html += '<span class="pixel" style="display:inline"';
+            html += 'id="x' + j + 'y' + i + '">';
+            if (text[i][j]) {
+                html += text[i][j];
+            } else {
+                html += '&nbsp';
+            }
+            html += '</span>';
+        }
+        html += '<br>';
+    }
+    canvas.innerHTML = html;
+
+    fitCanvas();
+    states[state_idx] = canvas.innerHTML;
+    widths[state_idx] = width;
+    heights[state_idx] = height;
 }
 
 // ------------------------ All Pencil methods ------------------------ //

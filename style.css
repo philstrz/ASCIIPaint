@@ -223,15 +223,46 @@ p {
 
 footer {
     font-size: 12px;
+    width: 1024px;
     color: var(--lightest);
     position: absolute;
+    bottom: -40px;
     left: 50%;
-    bottom: 16px;
-    transform: translate(-50%, 0%);
-    -ms-transform: translate(-50%, 0%);
+    text-align: center;
+    transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
 }
 
 footer a {
     text-decoration: none;
     color: var(--complement);
+}
+
+#coords {
+    padding: 4px 0 0 16px;
+    grid-column: 2 / span 3;
+    font-size: 16px;
+    text-align: left;
+    color: var(--darkest);
+    grid-row: 18 / span 2;
+}
+
+#text-input {
+    resize: none;
+    grid-row: 8;
+    grid-column: 1 / span 3;
+    width: 92px;
+    height: 32px;
+    font-size: 6px;
+    border-radius: 4px;
+    border-width: 0;
+}
+
+textarea::selection{
+    color: var(--lightest);
+    background: var(--darkest);
+}
+
+textarea:focus {
+    accent-color: var(--complement);
 }

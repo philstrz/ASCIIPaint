@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?d3qn68');
-  src:  url('fonts/icomoon.eot?d3qn68#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?d3qn68') format('truetype'),
-    url('fonts/icomoon.woff?d3qn68') format('woff'),
-    url('fonts/icomoon.svg?d3qn68#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?4l2044');
+  src:  url('fonts/icomoon.eot?4l2044#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?4l2044') format('truetype'),
+    url('fonts/icomoon.woff?4l2044') format('woff'),
+    url('fonts/icomoon.svg?4l2044#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -43,63 +43,69 @@
 .icon-code:before {
   content: "\e905";
 }
-.icon-eraser:before {
+.icon-coordinates:before {
   content: "\e906";
 }
-.icon-fill:before {
+.icon-eraser:before {
   content: "\e907";
 }
-.icon-grid:before {
+.icon-fill:before {
   content: "\e908";
 }
-.icon-height:before {
+.icon-grid:before {
   content: "\e909";
 }
-.icon-image:before {
+.icon-height:before {
   content: "\e90a";
 }
-.icon-line:before {
+.icon-image:before {
   content: "\e90b";
 }
-.icon-palette:before {
+.icon-import:before {
   content: "\e90c";
 }
-.icon-pencil:before {
+.icon-line:before {
   content: "\e90d";
 }
-.icon-rect:before {
+.icon-palette:before {
   content: "\e90e";
 }
-.icon-rect-filled:before {
+.icon-pencil:before {
   content: "\e90f";
 }
-.icon-redo:before {
+.icon-rect:before {
   content: "\e910";
 }
-.icon-reset:before {
+.icon-rect-filled:before {
   content: "\e911";
 }
-.icon-roller:before {
+.icon-redo:before {
   content: "\e912";
 }
-.icon-save:before {
+.icon-reset:before {
   content: "\e913";
 }
-.icon-size:before {
+.icon-roller:before {
   content: "\e914";
 }
-.icon-stamp:before {
+.icon-save:before {
   content: "\e915";
 }
-.icon-text:before {
+.icon-size:before {
   content: "\e916";
 }
-.icon-undo:before {
+.icon-stamp:before {
   content: "\e917";
 }
-.icon-unicode:before {
+.icon-text:before {
   content: "\e918";
 }
-.icon-width:before {
+.icon-undo:before {
   content: "\e919";
+}
+.icon-unicode:before {
+  content: "\e91a";
+}
+.icon-width:before {
+  content: "\e91b";
 }
