@@ -677,16 +677,20 @@ function importText() {
     for (let line of text) {
         width = Math.max(width, line.length);
     }
-    document.getElementById('width').value = width;
-    document.getElementById('height').value = height;
 
     // Reset canvas if no input
     if (width <= 0 || height <= 0) {
         width = 72;
         height = 24;
+        document.getElementById('width').value = width;
+        document.getElementById('height').value = height;
         reset();
+        fitCanvas();
         return;
     }
+
+    document.getElementById('width').value = width;
+    document.getElementById('height').value = height;
 
     // Populate the canvas
     let html = '';
@@ -695,7 +699,11 @@ function importText() {
             html += '<span class="pixel" style="display:inline"';
             html += 'id="x' + j + 'y' + i + '">';
             if (text[i][j]) {
-                html += text[i][j];
+                if (text[i][j] == ' ') {
+                    html += '&nbsp';
+                } else {
+                    html += text[i][j];
+                }
             } else {
                 html += '&nbsp';
             }
