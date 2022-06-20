@@ -661,7 +661,7 @@ function savePNG() {
 }
 
 function importText() {
-    if (!confirm('This will replace the current canvas. Are you sure?')) {
+    if (state_idx > 0 && !confirm('This will replace the current canvas. Are you sure?')) {
         return;
     }
     reset();
