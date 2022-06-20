@@ -670,6 +670,10 @@ function importText() {
     console.log(text);
     // Break up lines
     text = text.split('\n');
+    if (!text[text.length-1]) {
+        // Remove empty last line
+        text.pop();
+    }
 
     // Size canvas
     height = text.length;
