@@ -714,6 +714,7 @@ function importText() {
     canvas.innerHTML = html;
 
     fitCanvas();
+    regrid();
     states[state_idx] = canvas.innerHTML;
     widths[state_idx] = width;
     heights[state_idx] = height;
