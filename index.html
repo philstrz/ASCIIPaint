@@ -16,6 +16,10 @@
         Use html2canvas for the "export" function to save PNGs
     -->
     <script src="html2canvas.js"></script>
+    <!-- 
+        Use FileSaver to generate text files
+    -->
+    <script src="FileSaver.js"></script>
 </head>
 
 <body>
@@ -85,21 +89,25 @@
 
             <!-- 
                 Color options
-             -->
-             <i class="icon icon-palette" style="grid-row: 8"></i>
-             <input id="colorpicker" type="color" onchange="setColor(value)" value="#222222" autocomplete="off" title="Character Color" style="grid-row: 8">
+            -->
+            <i class="icon icon-palette" style="grid-row: 8"></i>
+            <input id="colorpicker" type="color" onchange="setColor(value)" value="#222222" autocomplete="off" title="Character Color" style="grid-row: 8">
 
-             <i class="icon icon-roller" style="grid-row: 8"></i>
-             <input id="bgpicker" type="color" onchange="setBGColor(value)" value="#eeeeee" autocomplete="off" title="Background Color" style="grid-row: 8">
+            <i class="icon icon-roller" style="grid-row: 8"></i>
+            <input id="bgpicker" type="color" onchange="setBGColor(value)" value="#eeeeee" autocomplete="off" title="Background Color" style="grid-row: 8">
             
+            <button title="Style Picker" id="style-picker" onclick="buttonClick(id);" style="grid-column:1; grid-row:9">
+                <i class="icon icon-dropper"></i>
+            </button>
+
             <!-- 
                 Character options
             -->
-            <i class="icon icon-char" style="grid-row: 10"></i>
-            <h1 id="symbol" style="grid-row: 10">
+            <i class="icon icon-char" style="grid-row: 11"></i>
+            <h1 id="symbol" style="grid-row: 11">
                 X
             </h1>
-            <p style="grid-column:3/5; grid-row: 10">
+            <p style="grid-column:3/5; grid-row: 11">
                 Enter any symbol using keyboard
             </p>
 
@@ -155,24 +163,33 @@
             <!-- 
                 Import/export
             -->
-            <i class="icon icon-save" style="grid-row:6"></i>
-            <button title="Save as PNG" id="save-png" onclick="buttonClickOnce(id);" style="grid-row:6">
+            <i class="icon icon-save" style="grid-row:6; grid-column: 1"></i>
+            
+            <button title="Save as PNG" id="save-png" onclick="buttonClickOnce(id);" style="grid-row:6;">
                 <i class="icon icon-image"></i>
             </button>
-            <button title="Copy Text" id="save-text" onclick="buttonClickOnce(id);" style="grid-row:6">
+            <button title="Save as Text" id="save-text" onclick="buttonClickOnce(id);" style="grid-row:6; grid-column: 3">
                 <i class="icon icon-text"></i>
             </button>
-            <button title="Copy HTML" id="save-html" onclick="buttonClickOnce(id);" style="grid-row:6">
-                <i class="icon icon-code"></i>
+            <button title="Save Each Color as Text" id="save-text-layers" onclick="buttonClickOnce(id);" style="grid-row:6; grid-column: 4">
+                <i class="icon icon-text-layers"></i>
             </button>
 
+            <button title="Copy Text" id="copy-text" onclick="buttonClickOnce(id);" style="grid-row:7; grid-column: 2">
+                <i class="icon icon-text-copy"></i>
+            </button>
+            <button title="Copy HTML" id="copy-html" onclick="buttonClickOnce(id);" style="grid-row:7; grid-column: 3">
+                <i class="icon icon-code-copy"></i>
+            </button>
+
+            
             <p id="copy-msg">
                 Copied text to clipboard
             </p>
 
             <textarea id="text-input" title="Paste text to import here" autocomplete="off"></textarea>
 
-            <button title="Import Text" id="import-text" onclick="buttonClickOnce(id);" style="grid-row:8">
+            <button title="Import Text" id="import-text" onclick="buttonClickOnce(id);" style="grid-row:9">
                 <i class="icon icon-import"></i>
             </button>
 
@@ -204,7 +221,10 @@
     </div>
 
     <footer>
-        Created by <a href="https://phlp.dev">phlp</a>. Uses <a href="https://html2canvas.hertzen.com/">html2canvas</a> by <a href="https://hertzen.com/">Niklas von Hertzen</a>. Always grateful for your <a href="mailto:asciipaint@phlp.dev">feedback</a> or <a href="https://ko-fi.com/phlpdev">support</a>. Also on <a href="https://phlp.itch.io/asciipaint">itch.io</a>.
+        Created by <a href="https://phlp.dev">phlp</a>.
+        Uses <a href="https://html2canvas.hertzen.com/">html2canvas</a> and <a href="https://github.com/eligrey/FileSaver.js">FileSaver</a>.
+        Always grateful for your <a href="mailto:asciipaint@phlp.dev">feedback</a> or <a href="https://ko-fi.com/phlpdev">support</a>.
+        Also on <a href="https://phlp.itch.io/asciipaint">itch.io</a>.
     </footer>
     
 

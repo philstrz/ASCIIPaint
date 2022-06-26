@@ -194,7 +194,7 @@ p {
 
 #copy-msg {
     grid-column: 1 / span 4; 
-    grid-row: 7; 
+    grid-row: 8; 
     padding: 8px 0 0 8px; 
     overflow: hidden;
     opacity: 0;
@@ -249,7 +249,7 @@ footer a {
 
 #text-input {
     resize: none;
-    grid-row: 8;
+    grid-row: 9;
     grid-column: 1 / span 3;
     width: 92px;
     height: 32px;

@@ -299,7 +299,6 @@ function buttonClickOnce(id) {
             canvas.innerHTML = states[state_idx];
             width = widths[state_idx];
             height = heights[state_idx];
-            console.log(canvas);
             regrid()
             fitCanvas();
             preview();
@@ -320,14 +319,20 @@ function buttonClickOnce(id) {
         case 'save-png':
             savePNG();
             break;
-        case 'save-text':
-            saveText();
+        case 'copy-text':
+            copyText();
             break;
-        case 'save-html':
-            saveHTML();
+        case 'copy-html':
+            copyHTML();
             break;
         case 'import-text':
             importText();
+            break;
+        case 'save-text':
+            saveText();
+            break;
+        case 'save-text-layers':
+            saveTextLayers();
             break;
     }
 }
@@ -404,6 +409,9 @@ function mouseDown(event) {
             break;
         case 'filled-circle':
             startCircle(event.target);
+            break;
+        case 'style-picker':
+            pickStyle(event.target);
             break;
     }
     preview();
@@ -593,6 +601,12 @@ function setPreviewBGColor(value) {
     pi.style.backgroundColor = value;
 }
 
+function pickStyle(target) {
+    setColor(rgb2hex(target.style.color));
+    document.getElementById('colorpicker').value = rgb2hex(target.style.color);
+    setChar(target.innerHTML);
+}
+
 // ------------------------ Import/export methods ------------------------ //
 
 let timeout = null;
@@ -606,7 +620,7 @@ function fadeMsg() {
     if (opacity < 0) clearInterval(timeout);
 }
 
-function saveHTML() {
+function copyHTML() {
     let html = '';
     html += '<div style="display: inline; text-align: center; font-family: monospace; background-color: ' + canvas.style.backgroundColor + ';">';
     html += canvas.innerHTML;
@@ -616,6 +630,27 @@ function saveHTML() {
 
     let msg = document.getElementById("copy-msg");
     msg.innerHTML = "Copied HTML to clipboard";
+    opacity = 2;
+    if (timeout) clearInterval(timeout);
+    timeout = setInterval(fadeMsg, 10);
+}
+
+function copyText() {
+    let text = '';
+    try {
+        text = canvas.innerText;
+    } catch (e) {
+        text = canvas.innerHTML;
+        text = text.replace(/<br>/g, '\n');
+        text = text.replace(/<[^>]*>/g, '');
+        var re = new RegExp('\&nbsp;', "g");
+        text = text.replace(re, ' ');
+    }
+    text = text.slice(0, text.length-1);
+    navigator.clipboard.writeText(text);
+
+    let msg = document.getElementById("copy-msg");
+    msg.innerHTML = "Copied text to clipboard";
     opacity = 2;
     if (timeout) clearInterval(timeout);
     timeout = setInterval(fadeMsg, 10);
@@ -633,10 +668,83 @@ function saveText() {
         text = text.replace(re, ' ');
     }
     text = text.slice(0, text.length-1);
-    navigator.clipboard.writeText(text);
+    
+    // Save logic in here
+    var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, "ascii.txt");
 
     let msg = document.getElementById("copy-msg");
-    msg.innerHTML = "Copied text to clipboard";
+    msg.innerHTML = "Downloading TXT file...";
+    opacity = 2;
+    if (timeout) clearInterval(timeout);
+    timeout = setInterval(fadeMsg, 10);
+}
+
+function saveTextLayers() {
+    let text = canvas.innerHTML;
+    var re = new RegExp('\&nbsp;', "g");
+    text = text.replace(re, ' ');
+    let lines = text.split('<br>');
+    lines = lines.slice(0, lines.length-1);
+
+    let colors = [];
+    let color = null;
+    // Go line-by-line and get all colors
+    for (let line of lines) {
+        line = line.split('</span>');
+        // Go pixel-by-pixel
+        for (let entry of line) {
+            color = entry.match(/\(([^\)]*)\)/);
+            if (color) {
+                color = color[0];
+                if (colors.includes(color)) {
+                } else {
+                    colors.push(color);
+                }
+            }
+        }
+    }
+    // If there's only one color, use regular saveText and return
+    if (colors <= 1) {
+        saveText();
+        return;
+    }
+    // More than one color, generate layers by color
+    let layers = new Array(colors.length);
+    
+    // Generate each layer by color, start with base color
+    for (let i = 0; i < colors.length; i++) {
+        layers[i] = '';
+        // Line by line
+        for (let line of lines) {
+            line = line.split('</span>');
+            line = line.slice(0, line.length-1);
+            // Pixel by pixel
+            for (let entry of line) {
+                color = entry.match(/\(([^\)]*)\)/);
+                if (color) {
+                    color = color[0];
+                    if (color == colors[i]) {
+                        layers[i] += entry[entry.length-1];
+                    } else {
+                        layers[i] += ' ';
+                    }
+                } else {
+                    layers[i] += ' ';
+                }
+            }
+            layers[i] += '\n';
+        }
+    }
+    for (let i = 0; i < colors.length; i++) {
+        text = layers[i];
+        var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+        var filename = "ascii" + (i+1) + ".txt";
+        saveAs(blob, filename);
+    }
+    
+    let msg = document.getElementById("copy-msg");
+    msg.innerHTML = "Downloading TXT files...";
     opacity = 2;
     if (timeout) clearInterval(timeout);
     timeout = setInterval(fadeMsg, 10);
@@ -667,7 +775,6 @@ function importText() {
     reset();
     // Pull text from textarea
     let text = document.getElementById('text-input').value;
-    console.log(text);
     // Break up lines
     text = text.split('\n');
     if (!text[text.length-1]) {
@@ -848,7 +955,6 @@ function startFill(target) {
     if (startChar == char && rgb2hex(startColor) == color) return;
 
     while (target) {
-        console.log(target);
         target = spread(target);
     }
 
