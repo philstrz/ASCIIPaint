@@ -908,6 +908,8 @@ function backText() {
 
     textTarget.innerHTML = '&nbsp';
     textTarget.style.color = null;
+
+    preview();
 }
 
 function nextLine() {
@@ -949,6 +951,8 @@ function enterChar(key) {
     textTarget = document.getElementById(id);
     textTarget.style.backgroundColor = gridcolor;
     textInterval = setInterval(flashText, 500);
+
+    preview();
 }
 
 function flashText() {
