@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?7fi6xz');
-  src:  url('fonts/icomoon.eot?7fi6xz#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?7fi6xz') format('truetype'),
-    url('fonts/icomoon.woff?7fi6xz') format('woff'),
-    url('fonts/icomoon.svg?7fi6xz#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?ulngkp');
+  src:  url('fonts/icomoon.eot?ulngkp#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?ulngkp') format('truetype'),
+    url('fonts/icomoon.woff?ulngkp') format('woff'),
+    url('fonts/icomoon.svg?ulngkp#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,9 +25,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-text-bare:before {
-  content: "\e920";
-}
 .icon-width:before {
   content: "\e900";
 }
@@ -43,84 +40,93 @@
 .icon-text-copy:before {
   content: "\e904";
 }
-.icon-text:before {
+.icon-text-bare:before {
   content: "\e905";
 }
-.icon-stamp:before {
+.icon-text:before {
   content: "\e906";
 }
-.icon-size:before {
+.icon-stamp:before {
   content: "\e907";
 }
-.icon-save:before {
+.icon-size:before {
   content: "\e908";
 }
-.icon-roller:before {
+.icon-save:before {
   content: "\e909";
 }
-.icon-reset:before {
+.icon-roller:before {
   content: "\e90a";
 }
-.icon-redo:before {
+.icon-reset:before {
   content: "\e90b";
 }
-.icon-rect-filled:before {
+.icon-redo:before {
   content: "\e90c";
 }
-.icon-rect:before {
+.icon-rect-filled:before {
   content: "\e90d";
 }
-.icon-pencil:before {
+.icon-rect:before {
   content: "\e90e";
 }
-.icon-palette:before {
+.icon-pencil:before {
   content: "\e90f";
 }
-.icon-line:before {
+.icon-palette:before {
   content: "\e910";
 }
-.icon-import:before {
+.icon-line:before {
   content: "\e911";
 }
-.icon-image:before {
+.icon-import:before {
   content: "\e912";
 }
-.icon-height:before {
+.icon-image:before {
   content: "\e913";
 }
-.icon-grid:before {
+.icon-height:before {
   content: "\e914";
 }
-.icon-fill:before {
+.icon-grid:before {
   content: "\e915";
 }
-.icon-eraser:before {
+.icon-fill-shape:before {
   content: "\e916";
 }
-.icon-dropper:before {
+.icon-fill:before {
   content: "\e917";
 }
-.icon-coordinates:before {
+.icon-eraser:before {
   content: "\e918";
 }
-.icon-code-copy:before {
+.icon-ellipse:before {
   content: "\e919";
 }
-.icon-code:before {
+.icon-dropper:before {
   content: "\e91a";
 }
-.icon-circle-filled:before {
+.icon-coordinates:before {
   content: "\e91b";
 }
-.icon-circle:before {
+.icon-code-copy:before {
   content: "\e91c";
 }
-.icon-char:before {
+.icon-code:before {
   content: "\e91d";
 }
-.icon-brush-square:before {
+.icon-circle-filled:before {
   content: "\e91e";
 }
-.icon-brush-circle:before {
+.icon-circle:before {
   content: "\e91f";
+}
+.icon-char:before {
+  content: "\e920";
+}
+.icon-brush-square:before {
+  content: "\e921";
+}
+.icon-brush-circle:before {
+  content: "\e922";
 }

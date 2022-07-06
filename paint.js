@@ -48,6 +48,9 @@ let square_size = 0;
 let eraser_size = 0;
 let circle_size = 0;
 
+// Shape settings
+let fill_shape = false;
+
 // Called reset
 function restart() {
     if(confirm("This will clear the canvas. Are you sure?")) {
@@ -352,6 +355,9 @@ function buttonClickToggle(id) {
         case 'grid':
             toggleGrid(id);
             break;
+        case 'fill-shape':
+            toggleFill(id);
+            break;
     }
 }
 
@@ -369,6 +375,16 @@ function lockGrid(bool=true) {
     }
     element.disabled = bool;
     gridlock = bool;
+}
+
+function toggleFill(id) {
+    if (fill_shape) {
+        fill_shape = false;
+        buttonUp(id);
+    } else {
+        fill_shape = true;
+        buttonDown(id);
+    }
 }
 
 function toggleGrid(id) {
@@ -426,6 +442,9 @@ function mouseDown(event) {
         case 'text-entry':
             startText(event.target);
             break;
+        case 'ellipse':
+            startEllipse(event.target);
+            break;
     }
     preview();
     last_target = event.target;
@@ -460,6 +479,9 @@ function mouseUp() {
             break;
         case 'filled-circle':
             stopCircle();
+            break;
+        case 'ellipse':
+            stopEllipse();
             break;
     }
     mouse_down = false;
@@ -501,6 +523,9 @@ function mouseMove(event) {
                 break;
             case 'filled-circle':
                 moveCircle(event.target, true);
+                break;
+            case 'ellipse':
+                moveEllipse(event.target);
                 break;
         }
     }
@@ -1179,7 +1204,7 @@ function moveRectangle(target, filled=false) {
             top = y;
             bottom = y_start;
         }
-        if (filled) {
+        if (fill_shape) {
             for (x = left; x <= right; x++) {
                 for (y = top; y <= bottom; y++) {
                     id = 'x' + x + 'y' + y;
@@ -1211,6 +1236,81 @@ function stopRectangle() {
     stopPencil();
 }
 
+// ------------------------ Ellipse/filled ellipse ------------------------ //
+
+function startEllipse(target) {
+    if (target.className == 'pixel') {
+        target.innerHTML = char;
+        target.style.color = color;
+        let id = target.id.split('y');
+        x_start = parseInt(id[0].slice(1));
+        y_start = parseInt(id[1]);
+    }
+}
+
+function moveEllipse(target, filled=false) {
+    canvas.innerHTML = states[state_idx];
+    target = document.getElementById(target.id);
+    if (target.className == 'pixel') {
+        let id = target.id.split('y');
+        let x = parseInt(id[0].slice(1));
+        let y = parseInt(id[1]);
+        
+        let left = 0;
+        let right = 0;
+        let top = 0;
+        let bottom = 0;
+        
+        if (x >= x_start) {
+            left = x_start;
+            right = x;
+        } else {
+            left = x;
+            right = x_start;
+        }
+        if (y >= y_start) {
+            top = y_start;
+            bottom = y;
+        } else {
+            top = y;
+            bottom = y_start;
+        }
+
+        let x_center = Math.floor((right + left) / 2);
+        let y_center = Math.floor((top + bottom) / 2);
+        let a = Math.floor((right - left) / 2);
+        let b = Math.floor((bottom - top) / 2);
+
+        for (let theta = 0; theta <= 2 * Math.PI; theta += Math.PI / ( 8 * Math.max(a,b))) {
+            x = x_center + a * Math.cos(theta);
+            x = Math.round(x);
+            y = y_center + b * Math.sin(theta);
+            y = Math.round(y);
+
+            id = 'x' + x + 'y' + y;
+            target = document.getElementById(id);
+            if (target) startPencil(target);
+
+            if (fill_shape) {
+                left = x_center - a * Math.abs(Math.cos(theta));
+                left = Math.round(left);
+                right = x_center + a * Math.abs(Math.cos(theta));
+                right = Math.round(right);
+                for (x = left; x < right; x++) {
+                    id = 'x' + x + 'y' + y;
+                    target = document.getElementById(id);
+                    if (target) startPencil(target);
+                }
+            }
+        }
+        regrid();
+    }
+}
+
+function stopEllipse() {
+    stopPencil();
+}
+
 // ------------------------ Circle/filled circ ------------------------ //
 
 function startCircle(target) {
@@ -1223,7 +1323,7 @@ function startCircle(target) {
     }
 }
 
-function moveCircle(target, filled=false) {
+function moveCircle(target) {
     canvas.innerHTML = states[state_idx];
     target = document.getElementById(target.id);
     if (target.className == 'pixel') {
@@ -1244,7 +1344,7 @@ function moveCircle(target, filled=false) {
             target = document.getElementById(id);
             if (target) startPencil(target);
 
-            if (filled) {
+            if (fill_shape) {
                 left = x_start - r * Math.abs(Math.cos(theta));
                 left = Math.round(left);
                 right = x_start + r * Math.abs(Math.cos(theta));
