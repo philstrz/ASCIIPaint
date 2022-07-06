@@ -50,6 +50,7 @@ let circle_size = 0;
 
 // Shape settings
 let fill_shape = false;
+let n = 3;
 
 // Called reset
 function restart() {
@@ -445,6 +446,9 @@ function mouseDown(event) {
         case 'ellipse':
             startEllipse(event.target);
             break;
+        case 'polygon':
+            startPolygon(event.target);
+            break;
     }
     preview();
     last_target = event.target;
@@ -482,6 +486,9 @@ function mouseUp() {
             break;
         case 'ellipse':
             stopEllipse();
+            break;
+        case 'polygon':
+            stopPolygon();
             break;
     }
     mouse_down = false;
@@ -526,6 +533,9 @@ function mouseMove(event) {
                 break;
             case 'ellipse':
                 moveEllipse(event.target);
+                break;
+            case 'polygon':
+                movePolygon(event.target);
                 break;
         }
     }
@@ -576,6 +586,12 @@ function updateSlider(id) {
                 buttonClick('circle-brush');
             }
             break;
+        case 'n':
+            n = parseInt(slider.value);
+            if (mode != 'polygon') {
+                buttonClick('polygon');
+            }
+            document.getElementById('ntext').innerHTML = n;
     }
 }
 
@@ -1363,6 +1379,87 @@ function moveCircle(target) {
 function stopCircle() {
     stopPencil();
 }
+
+
+// ------------------------ Polygon or regular n-gon ------------------------ //
+
+let x_center = 0, y_center = 0;
+
+function startPolygon(target) {
+    if (target.className == 'pixel') {
+        target.innerHTML = char;
+        target.style.color = color;
+        let id = target.id.split('y');
+        x_center = parseInt(id[0].slice(1));
+        y_center = parseInt(id[1]);
+    }
+}
+
+function movePolygon(target) {
+    canvas.innerHTML = states[state_idx];
+    target = document.getElementById(target.id);
+    if (target.className == 'pixel') {
+        let id = target.id.split('y');
+        let x = parseInt(id[0].slice(1));
+        let y = parseInt(id[1]);
+
+        let x0 = x;
+        let y0 = y;
+
+        let theta0 = Math.atan2(y-y_center, x-x_center);
+        let theta = theta0;
+        let r = Math.pow(x-x_center, 2) + 4*Math.pow(y-y_center, 2);
+        r = Math.sqrt(r);
+
+        x_start = x_center + r * Math.cos(theta0);
+        x_start = Math.round(x_start);
+        y_start = y_center + 0.5 * r * Math.sin(theta0);
+        y_start = Math.round(y_start);
+
+        let degsum = 0;
+        
+        for (let i = 1; i <= n; i++) {
+            theta += 2 * Math.PI / n;
+            degsum += theta - theta0;
+
+            x = x_center + r * Math.cos(theta);
+            x = Math.round(x);
+            y = y_center + 0.5 * r * Math.sin(theta);
+            y = Math.round(y);
+            
+            console.log(x, y);
+
+            let line_width = x-x_start;
+            let line_height = y-y_start;
+            let length = Math.max(Math.abs(line_width), Math.abs(line_height));
+            
+            if (length <= 0) {
+                startPencil(target);
+            } else {
+                let w = 0, h = 0;
+                for (let t = 0; t <= length; t++) {
+                    w = Math.round(line_width * t / length);
+                    h = Math.round(line_height * t / length);
+                    id = 'x' + (x_start + w) + 'y' + (y_start + h);
+                    target = document.getElementById(id);
+                    if (target) startPencil(target);
+                }
+            }
+
+            theta0 = theta;
+            x_start = x;
+            y_start = y;
+        }
+        
+        console.log(degsum * 180 / Math.PI);
+    }
+    regrid();
+}
+
+function stopPolygon() {
+    stopPencil();
+}
+
 
 // ------------------------ Eraser ------------------------ //
 

@@ -143,6 +143,14 @@ input[type=range] {
     accent-color: var(--dark);
 }
 
+#n {
+    width: 76px;
+}
+
+#ntext {
+    padding: 0 12px;
+}
+
 input[type=color] {
     width: 28px;
     height: 28px;

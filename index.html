@@ -34,6 +34,8 @@
      -->
     <div class="left">
         <div class="panel">
+
+            
             <!-- 
                 First row:
                 Pencil, line, fill and grid
@@ -50,29 +52,44 @@
             <button title="Grid" id="grid" onclick="buttonClickToggle(id);" style="grid-column:4; grid-row:1">
                 <i class="icon icon-grid"></i>
             </button>
-            <!-- 
-                Second row:
-                Rect, filled rect, circle, filled circle
-             -->
-            <button title="Rectangle" id="rectangle" onclick="buttonClick(id);" style="grid-column:1; grid-row:2">
-                <i class="icon icon-rect"></i>
-            </button>
-            <button title="Circle" id="circle" onclick="buttonClick(id);" style="grid-column:2; grid-row:2">
-                <i class="icon icon-circle"></i>
-            </button>
-            <button title="Ellipse" id="ellipse" onclick="buttonClick(id);" style="grid-column:3; grid-row:2">
-                <i class="icon icon-ellipse"></i>
-            </button>
-            <button title="Fill Shape" id="fill-shape" onclick="buttonClickToggle(id);" style="grid-column:4; grid-row:2">
-                <i class="icon icon-fill-shape"></i>
-            </button>
 
             <!-- 
                 Text entry
              -->
-            <button title="Text Entry" id="text-entry" onclick="buttonClick(id);" style="grid-column:1; grid-row:3">
+             <button title="Text Entry" id="text-entry" onclick="buttonClick(id);" style="grid-column:1; grid-row:2">
                 <i class="icon icon-text-bare"></i>
             </button>
+
+            <!-- 
+                Second row:
+                Rect, filled rect, circle, filled circle
+             -->
+            <button title="Rectangle" id="rectangle" onclick="buttonClick(id);" style="grid-column:1; grid-row:4">
+                <i class="icon icon-rect"></i>
+            </button>
+            <button title="Circle" id="circle" onclick="buttonClick(id);" style="grid-column:2; grid-row:4">
+                <i class="icon icon-circle"></i>
+            </button>
+            <button title="Ellipse" id="ellipse" onclick="buttonClick(id);" style="grid-column:3; grid-row:4">
+                <i class="icon icon-ellipse"></i>
+            </button>
+            <button title="Fill Shape" id="fill-shape" onclick="buttonClickToggle(id);" style="grid-column:4; grid-row:4">
+                <i class="icon icon-fill-shape"></i>
+            </button>
+
+
+            <!-- 
+                Regular n-gons
+             -->
+            <button title="Polygon" id="polygon" onclick="buttonClick(id);" style="grid-column:1; grid-row:5">
+                <i class="icon icon-polygon"></i>
+            </button>
+            
+            <input id="n" type="range" min="3" max="10" value="3" oninput="updateSlider(id);" autocomplete="off" title="# of sides" style="grid-column:2/span 2; grid-row:5">
+            <h1 id="ntext" style="grid-column: 4; grid-row: 5">
+                3
+            </h2>
+            
 
             <!-- 
                 Next up, tools with a width option
@@ -80,44 +97,44 @@
                 Square brush
                 Circle brush
             -->
-            <button title="Eraser" id="eraser" onclick="buttonClick(id);" style="grid-column:1; grid-row:5">
+            <button title="Eraser" id="eraser" onclick="buttonClick(id);" style="grid-column:1; grid-row:7">
                 <i class="icon icon-eraser"></i>
             </button>
-            <input id="eraser-size" type="range" min="0" max="5" value="1" onchange="updateSlider(id);" autocomplete="off" title="Eraser Size" style="grid-column:2/span 3; grid-row:5">
+            <input id="eraser-size" type="range" min="0" max="5" value="1" onchange="updateSlider(id);" autocomplete="off" title="Eraser Size" style="grid-column:2/span 3; grid-row:7">
 
-            <button title="Square Brush" id="square-brush" onclick="buttonClick(id);" style="grid-column:1; grid-row:6">
+            <button title="Square Brush" id="square-brush" onclick="buttonClick(id);" style="grid-column:1; grid-row:8">
                 <i class="icon icon-brush-square"></i>
             </button>
-            <input id="square-size" type="range" min="0" max="5" value="1" onchange="updateSlider(id);" autocomplete="off" title="Eraser Size" style="grid-column:2/span 3; grid-row:6">
+            <input id="square-size" type="range" min="0" max="5" value="1" onchange="updateSlider(id);" autocomplete="off" title="Eraser Size" style="grid-column:2/span 3; grid-row:8">
 
-            <button title="Circle Brush" id="circle-brush" onclick="buttonClick(id);" style="grid-column:1; grid-row:7">
+            <button title="Circle Brush" id="circle-brush" onclick="buttonClick(id);" style="grid-column:1; grid-row:9">
                 <i class="icon icon-brush-circle"></i>
             </button>
-            <input id="circle-size" type="range" min="0" max="5" value="1" onchange="updateSlider(id);" autocomplete="off" title="Eraser Size" style="grid-column:2/span 3; grid-row:7">
+            <input id="circle-size" type="range" min="0" max="5" value="1" onchange="updateSlider(id);" autocomplete="off" title="Eraser Size" style="grid-column:2/span 3; grid-row:9">
 
             
 
             <!-- 
                 Color options
             -->
-            <i class="icon icon-palette" style="grid-row: 9"></i>
-            <input id="colorpicker" type="color" onchange="setColor(value)" value="#222222" autocomplete="off" title="Character Color" style="grid-row: 9">
+            <i class="icon icon-palette" style="grid-row: 11"></i>
+            <input id="colorpicker" type="color" onchange="setColor(value)" value="#222222" autocomplete="off" title="Character Color" style="grid-row: 11">
 
-            <i class="icon icon-roller" style="grid-row: 9"></i>
-            <input id="bgpicker" type="color" onchange="setBGColor(value)" value="#eeeeee" autocomplete="off" title="Background Color" style="grid-row: 9">
+            <i class="icon icon-roller" style="grid-row: 11"></i>
+            <input id="bgpicker" type="color" onchange="setBGColor(value)" value="#eeeeee" autocomplete="off" title="Background Color" style="grid-row: 11">
             
-            <button title="Style Picker" id="style-picker" onclick="buttonClick(id);" style="grid-column:1; grid-row:10">
+            <button title="Style Picker" id="style-picker" onclick="buttonClick(id);" style="grid-column:1; grid-row:12">
                 <i class="icon icon-dropper"></i>
             </button>
 
             <!-- 
                 Character options
             -->
-            <i class="icon icon-char" style="grid-row: 12"></i>
-            <h1 id="symbol" style="grid-row: 12">
+            <i class="icon icon-char" style="grid-row: 14"></i>
+            <h1 id="symbol" style="grid-row: 14">
                 X
             </h1>
-            <p style="grid-column:3/5; grid-row: 12">
+            <p style="grid-column:3/5; grid-row: 14">
                 Enter any symbol using keyboard
             </p>
 
