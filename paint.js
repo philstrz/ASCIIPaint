@@ -911,6 +911,7 @@ function stopText() {
         textTarget = null;
     }
     textEntry = false;
+    nextState();
 }
 
 function enterText(key) {
@@ -944,11 +945,14 @@ function backText() {
     clearInterval(textInterval);
     let id = 'x' + x + 'y' + y;
     textTarget = document.getElementById(id);
+    textTarget.innerHTML = '&nbsp';
+    textTarget.style.color = null;
+    nextState();
+
     textTarget.style.backgroundColor = gridcolor;
     textInterval = setInterval(flashText, 500);
 
-    textTarget.innerHTML = '&nbsp';
-    textTarget.style.color = null;
+    
 
     preview();
 }
@@ -965,6 +969,7 @@ function nextLine() {
     clearInterval(textInterval);
     let id = 'x' + x + 'y' + y;
     textTarget = document.getElementById(id);
+    nextState();
     textTarget.style.backgroundColor = gridcolor;
     textInterval = setInterval(flashText, 500);
 }
