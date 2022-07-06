@@ -929,7 +929,6 @@ function nextLine() {
 }
 
 function enterChar(key) {
-    console.log(key);
     if (key == ' ') key = '&nbsp';
     textTarget.innerHTML = key;
     textTarget.style.color = color;
