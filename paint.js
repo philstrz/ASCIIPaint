@@ -118,6 +118,10 @@ function setup() {
 
 // Handle keyboard input
 function press(key) {
+    if (textEntry) {
+        enterText(key);
+        return;
+    }
     switch (key) {
         case "ArrowUp":
             scaleCanvas(1.1);
@@ -132,6 +136,12 @@ function press(key) {
 
 function down(key) {
     switch (key) {
+        case "Escape":
+            if (textEntry) stopText();
+            break;
+        case "Backspace":
+            if (textEntry) backText();
+            break;
         case "ArrowUp":
             scaleCanvas(1.1);
             break;
@@ -412,6 +422,9 @@ function mouseDown(event) {
             break;
         case 'style-picker':
             pickStyle(event.target);
+            break;
+        case 'text-entry':
+            startText(event.target);
             break;
     }
     preview();
@@ -830,6 +843,126 @@ function importText() {
     widths[state_idx] = width;
     heights[state_idx] = height;
 }
+
+// ------------------------ Text entry ------------------------ //
+
+let textStart = 0;
+let textTarget = null;
+let textEntry = false;
+let textInterval = null;
+
+function startText(target) {
+    stopText();
+    if(target.className == "pixel") {
+        textTarget = target;
+        textStart = target.id;
+        textEntry = true;
+
+        textTarget.style.backgroundColor = gridcolor;
+        textInterval = setInterval(flashText, 500);
+    }
+}
+
+function stopText() {
+    clearInterval(textInterval);
+    if (textTarget) {
+        textTarget.style.backgroundColor = null;
+        textTarget = null;
+    }
+    textEntry = false;
+}
+
+function enterText(key) {
+    switch (key) {
+        case "Enter":
+            nextLine();
+            break;
+        default:
+            enterChar(key);
+            break;
+    }
+}
+
+function backText() {
+    let [x,y] = textTarget.id.split('y');
+    x = x.slice(1);
+    x = parseInt(x);
+    y = parseInt(y);
+    x -= 1;
+    // Wrap text to following line
+    if (x < 0) {
+        y -= 1;
+        x += width;
+    }
+    // Return to first line after last
+    if (y < 0) {
+        y += height;
+    }
+
+    textTarget.style.backgroundColor = null;
+    clearInterval(textInterval);
+    let id = 'x' + x + 'y' + y;
+    textTarget = document.getElementById(id);
+    textTarget.style.backgroundColor = gridcolor;
+    textInterval = setInterval(flashText, 500);
+
+    textTarget.innerHTML = '&nbsp';
+    textTarget.style.color = null;
+}
+
+function nextLine() {
+    let x = textStart.split('y')[0].slice(1);
+    x = parseInt(x);
+    let y = textTarget.id.split('y')[1];
+    y = parseInt(y);
+    y += 1;
+    y %= height;
+
+    textTarget.style.backgroundColor = null;
+    clearInterval(textInterval);
+    let id = 'x' + x + 'y' + y;
+    textTarget = document.getElementById(id);
+    textTarget.style.backgroundColor = gridcolor;
+    textInterval = setInterval(flashText, 500);
+}
+
+function enterChar(key) {
+    textTarget.innerHTML = key;
+    textTarget.style.color = color;
+
+    let [x,y] = textTarget.id.split('y');
+    x = x.slice(1);
+    x = parseInt(x);
+    y = parseInt(y);
+    x += 1;
+    // Wrap text to following line
+    if (x >= width) {
+        y += 1;
+        x %= width;
+    }
+    // Return to first line after last
+    y %= height;
+
+    textTarget.style.backgroundColor = null;
+    clearInterval(textInterval);
+    let id = 'x' + x + 'y' + y;
+    textTarget = document.getElementById(id);
+    textTarget.style.backgroundColor = gridcolor;
+    textInterval = setInterval(flashText, 500);
+}
+
+function flashText() {
+    if (mode != 'text-entry') {
+        stopText();
+        return;
+    }
+    if(textTarget.style.backgroundColor) {
+        textTarget.style.backgroundColor = null;
+    } else {
+        textTarget.style.backgroundColor = gridcolor;
+    }
+}
+
 
 // ------------------------ All Pencil methods ------------------------ //
 
