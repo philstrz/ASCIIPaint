@@ -1420,19 +1420,14 @@ function movePolygon(target) {
         x_start = Math.round(x_start);
         y_start = y_center + 0.5 * r * Math.sin(theta0);
         y_start = Math.round(y_start);
-
-        let degsum = 0;
         
         for (let i = 1; i <= n; i++) {
             theta += 2 * Math.PI / n;
-            degsum += theta - theta0;
 
             x = x_center + r * Math.cos(theta);
             x = Math.round(x);
             y = y_center + 0.5 * r * Math.sin(theta);
             y = Math.round(y);
-            
-            console.log(x, y);
 
             let line_width = x-x_start;
             let line_height = y-y_start;
@@ -1455,8 +1450,6 @@ function movePolygon(target) {
             x_start = x;
             y_start = y;
         }
-        
-        console.log(degsum * 180 / Math.PI);
     }
     regrid();
 }
