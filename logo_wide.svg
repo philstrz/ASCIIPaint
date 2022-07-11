@@ -12,7 +12,7 @@
    viewBox="0 0 166.6854 132.29"
    version="1.1"
    id="svg8"
-   inkscape:export-filename="C:\Create\Apps\ASCIIPaint\v3\logo.png"
+   inkscape:export-filename="C:\Create\Apps\ASCIIPaint\v3\logo_wide.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
@@ -68,8 +68,8 @@
      inkscape:showpageshadow="false"
      inkscape:window-width="1920"
      inkscape:window-height="1051"
-     inkscape:window-x="902"
-     inkscape:window-y="1084"
+     inkscape:window-x="-9"
+     inkscape:window-y="4"
      inkscape:window-maximized="1"
      guidetolerance="20">
     <inkscape:grid
@@ -88,7 +88,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
